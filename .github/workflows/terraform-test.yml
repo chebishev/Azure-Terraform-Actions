@@ -35,11 +35,3 @@ jobs:
     # validate the Terraform configuration
     - name: Terraform Validate
       run: terraform validate
-  
-    # generate an execution plan for Terraform
-    - name: Terraform Plan
-      run: terraform plan
-  
-    # apply the plan
-    - name: Terraform Apply
-      run: terraform apply -auto-approve
