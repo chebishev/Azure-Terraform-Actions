@@ -16,8 +16,8 @@ env:
 
 jobs:
   terraform-plan:
+    name: "Terraform Plan"
     runs-on: ubuntu-latest
-    environment: production
 
     # use the bash shell wheter the Github actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
@@ -27,7 +27,7 @@ jobs:
     steps:
     # checkout the repository to the GitHub Actions runner
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     # Login to Azure via Azure CLI
     - name: Azure Login
@@ -55,30 +55,32 @@ jobs:
         name: tfplan
         path: tfplan
 
+
   terraform-apply:
-      runs-on: ubuntu-latest
-      needs: terraform-plan
-  
-      steps:
-      # checkout the repository to the GitHub Actions runner
-      - name: Checkout
-        uses: actions/checkout@v2
-  
-      # install latest version of Terraform CLI
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-      
-      # initialize a new or existing Terraform working directory by creating initial files, downloading remote state files and working with plugin modules
-      - name: Terraform Init
-        run: terraform init
-  
-      # download saved plan from artifacts
-      - name: Download Plan
-        uses: actions/download-artifact@v4
-        with:
-          name: tfplan
-          path: tfplan
-      
-      # terraform apply
-      - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
+    name: "Terraform Apply"
+    runs-on: ubuntu-latest
+    needs: terraform-plan
+
+    steps:
+    # checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # install latest version of Terraform CLI
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+    
+    # initialize a new or existing Terraform working directory by creating initial files, downloading remote state files and working with plugin modules
+    - name: Terraform Init
+      run: terraform init
+
+    # download saved plan from artifacts
+    - name: Download Plan
+      uses: actions/download-artifact@v2
+      with:
+        name: tfplan
+        path: .
+    
+    # terraform apply
+    - name: Terraform Apply
+      run: terraform apply -auto-approve tfplan
