@@ -46,7 +46,7 @@ jobs:
 
     # generate an execution plan
     - name: Terraform Plan
-      run: terraform plan -input=false -out=tfplan.out
+      run: terraform plan -input=false -out=tfplan
 
     # save plan to artifacts
     - name: Save Plan
